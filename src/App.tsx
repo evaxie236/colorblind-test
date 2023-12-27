@@ -10,16 +10,20 @@ function App() {
   }
 
   function diffRGB(r: number, g: number, b: number) {
-    const newR = r + Math.floor(Math.random() * 20) + 10;
-    const newG = g + Math.floor(Math.random() * 20) + 10;
-    const newB = b + Math.floor(Math.random() * 20) + 10;
+    const newR = r + Math.floor(Math.random() * 20) + difficulty;
+    const newG = g + Math.floor(Math.random() * 20) + difficulty;
+    const newB = b + Math.floor(Math.random() * 20) + difficulty;
     return { r: newR, g: newG, b: newB };
   }
 
   function handleChoice(choice: number) {
+    if (score === 500_000) {
+      setPage("congratulations");
+    }
     if (choice === randomTile) {
       setRandomColor(generateRGB());
-      setScore(score + 1);
+      setScore(score + 10_000);
+      setDiff(difficulty - 1);
     } else {
       setPage("gameover");
     }
@@ -29,8 +33,9 @@ function App() {
     setPage("game");
     setRandomColor(generateRGB());
     setScore(0);
+    setDiff(50);
   }
-
+  const [difficulty, setDiff] = useState(50);
   const [randomColor, setRandomColor] = useState(generateRGB());
   const diffColor = diffRGB(randomColor.r, randomColor.g, randomColor.b);
   const randomTile = Math.floor(Math.random() * 4);
@@ -96,6 +101,13 @@ function App() {
       {page === "gameover" && (
         <>
           <p>score: {score}</p>
+          <button onClick={newGame}>play again</button>
+        </>
+      )}
+      {page === "congratulations" && (
+        <>
+          <p>congratulations. you are not colorblind LOL</p>
+          <p>score: {score} (the maximum)</p>
           <button onClick={newGame}>play again</button>
         </>
       )}
